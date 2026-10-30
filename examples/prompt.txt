@@ -1,0 +1,10 @@
+Photorealistic 15-second television commercial in a bright, sunny modern kitchen, natural daylight through a window, warm and clean colour grade.
+
+The woman in <Picture 1> keeps her exact face, short silver-blue bob haircut and lime-green turtleneck throughout. The blue "WAVE" soda can in <Picture 2> keeps its exact shape, blue colour and legible white WAVE logo throughout.
+
+[0s] Medium shot: the woman from <Picture 1> (S1) sits at a sunny kitchen table holding the blue WAVE can from <Picture 2>. She smiles and raises the can toward the camera, the logo facing the lens. She does not speak.
+[5.2s] She holds the WAVE can up beside her and talks warmly to the camera, gesturing lightly with her free hand. The woman (S1) says: <d>[Chinese] 嗨！今天想跟你分享，我每天都離不開的這罐汽水。</d>
+[10.5s] Closer shot: she keeps holding the WAVE can up, the logo legible, smiles brightly and says to the camera. The woman (S1) says: <d>[Chinese] WAVE 氣泡飲，冰涼一口，整個夏天都是我的！</d>
+
+overall_soundscape: the crisp hiss and fizz of the soda can when she raises it, soft kitchen ambience; her warm, friendly young female voice speaking Mandarin Chinese clearly to the camera.
+non_diegetic_music: a soft, bright pop music bed, low under her voice.

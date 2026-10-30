@@ -1,0 +1,279 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "minimax_h3_ref2va_pruned_int8_convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "model": [
+        "1",
+        0
+      ],
+      "lora_name": "minimax_h3_ref2v_turbo_4step_v0.1_comfyui_bf16.safetensors",
+      "strength_model": 1.0
+    }
+  },
+  "3": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen3vl_32b_minimax_h3_nvfp4_awq.safetensors",
+      "type": "minimax",
+      "device": "default"
+    }
+  },
+  "4": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_video_vae_fp16.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "minimax_h3_audio_vae_fp32.safetensors"
+    }
+  },
+  "6": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "new_person.png"
+    }
+  },
+  "7": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "new_product.png"
+    }
+  },
+  "8": {
+    "class_type": "MiniMaxH3ReferenceToVideo",
+    "inputs": {
+      "clip": [
+        "3",
+        0
+      ],
+      "vae": [
+        "4",
+        0
+      ],
+      "audio_vae": [
+        "5",
+        0
+      ],
+      "prompt": "Photorealistic 15-second television commercial in a bright, sunny modern kitchen, natural daylight through a window, warm and clean colour grade.\n\nThe woman in <Picture 1> keeps her exact face, short silver-blue bob haircut and lime-green turtleneck throughout. The blue \"WAVE\" soda can in <Picture 2> keeps its exact shape, blue colour and legible white WAVE logo throughout.\n\n[0s] Medium shot: the woman from <Picture 1> (S1) sits at a sunny kitchen table holding the blue WAVE can from <Picture 2>. She smiles and raises the can toward the camera, the logo facing the lens. She does not speak.\n[5.2s] She holds the WAVE can up beside her and talks warmly to the camera, gesturing lightly with her free hand. The woman (S1) says: <d>[Chinese] 嗨！今天想跟你分享，我每天都離不開的這罐汽水。</d>\n[10.5s] Closer shot: she keeps holding the WAVE can up, the logo legible, smiles brightly and says to the camera. The woman (S1) says: <d>[Chinese] WAVE 氣泡飲，冰涼一口，整個夏天都是我的！</d>\n\noverall_soundscape: the crisp hiss and fizz of the soda can when she raises it, soft kitchen ambience; her warm, friendly young female voice speaking Mandarin Chinese clearly to the camera.\nnon_diegetic_music: a soft, bright pop music bed, low under her voice.",
+      "width": 1280,
+      "height": 704,
+      "length": 379,
+      "ref_image_size": "match",
+      "ref_images.ref_image_0": [
+        "6",
+        0
+      ],
+      "ref_images.ref_image_1": [
+        "7",
+        0
+      ]
+    }
+  },
+  "20": {
+    "class_type": "VHS_LoadVideoPath",
+    "inputs": {
+      "video": "/content/src379.mp4",
+      "force_rate": 24,
+      "custom_width": 1280,
+      "custom_height": 704,
+      "frame_load_cap": 379,
+      "skip_first_frames": 0,
+      "select_every_nth": 1
+    }
+  },
+  "21": {
+    "class_type": "Canny",
+    "inputs": {
+      "image": [
+        "20",
+        0
+      ],
+      "low_threshold": 0.2,
+      "high_threshold": 0.5
+    }
+  },
+  "22": {
+    "class_type": "ModelPatchLoader",
+    "inputs": {
+      "name": "minimax_h3_fun_controlnet_union_2.0_pruned_int8_convrot.safetensors"
+    }
+  },
+  "23": {
+    "class_type": "MiniMaxH3FunControlNetApply",
+    "inputs": {
+      "model": [
+        "2",
+        0
+      ],
+      "model_patch": [
+        "22",
+        0
+      ],
+      "vae": [
+        "4",
+        0
+      ],
+      "strength": 0.7,
+      "start_percent": 0.0,
+      "end_percent": 1.0,
+      "control_video": [
+        "21",
+        0
+      ]
+    }
+  },
+  "24": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "21",
+        0
+      ],
+      "frame_rate": 24,
+      "loop_count": 0,
+      "filename_prefix": "final_dialogue_canny",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 23,
+      "save_metadata": false,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true
+    }
+  },
+  "17": {
+    "class_type": "MiniMaxH3ContextWindows",
+    "inputs": {
+      "model": [
+        "23",
+        0
+      ],
+      "context_length": 124,
+      "context_overlap": 39,
+      "fuse_method": "pyramid",
+      "freenoise": true,
+      "split_conds_to_windows": false
+    }
+  },
+  "9": {
+    "class_type": "BasicGuider",
+    "inputs": {
+      "model": [
+        "17",
+        0
+      ],
+      "conditioning": [
+        "8",
+        0
+      ]
+    }
+  },
+  "10": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 768914106098754
+    }
+  },
+  "11": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "12": {
+    "class_type": "BasicScheduler",
+    "inputs": {
+      "model": [
+        "17",
+        0
+      ],
+      "scheduler": "beta",
+      "steps": 4,
+      "denoise": 1.0
+    }
+  },
+  "13": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "10",
+        0
+      ],
+      "guider": [
+        "9",
+        0
+      ],
+      "sampler": [
+        "11",
+        0
+      ],
+      "sigmas": [
+        "12",
+        0
+      ],
+      "latent_image": [
+        "8",
+        1
+      ]
+    }
+  },
+  "14": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "13",
+        0
+      ],
+      "vae": [
+        "4",
+        0
+      ]
+    }
+  },
+  "15": {
+    "class_type": "VAEDecodeAudio",
+    "inputs": {
+      "samples": [
+        "13",
+        0
+      ],
+      "vae": [
+        "5",
+        0
+      ]
+    }
+  },
+  "16": {
+    "class_type": "VHS_VideoCombine",
+    "inputs": {
+      "images": [
+        "14",
+        0
+      ],
+      "audio": [
+        "15",
+        0
+      ],
+      "frame_rate": 24,
+      "loop_count": 0,
+      "filename_prefix": "final_dialogue",
+      "format": "video/h264-mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 18,
+      "save_metadata": true,
+      "trim_to_audio": false,
+      "pingpong": false,
+      "save_output": true
+    }
+  }
+}
